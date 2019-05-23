@@ -18,7 +18,9 @@ package io.confluent.connect.hdfs;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileSystemTestWrapper;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.record.TimestampType;
@@ -31,6 +33,7 @@ import org.junit.After;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -61,20 +64,28 @@ public class TestWithMiniDFSCluster extends HdfsSinkConnectorTestBase {
   @Override
   protected Map<String, String> createProps() {
     Map<String, String> props = super.createProps();
-    url = "hdfs://" + cluster.getNameNode().getClientNamenodeAddress();
+    url = "hdfs://127.0.0.1:9000"; // + cluster.getNameNode().getClientNamenodeAddress();
     // Override configs using url here
     localProps.put(HdfsSinkConnectorConfig.HDFS_URL_CONFIG, url);
     localProps.put(StorageCommonConfig.STORE_URL_CONFIG, url);
+//    localProps.put(StorageCommonConfig.TOPICS_DIR_CONFIG, "topics");
     props.putAll(localProps);
     return props;
   }
 
   //@Before should be omitted in order to be able to add properties per test.
   public void setUp() throws Exception {
-    Configuration localConf = new Configuration();
-    cluster = createDFSCluster(localConf);
-    cluster.waitActive();
-    fs = cluster.getFileSystem();
+//    Configuration localConf = new Configuration();
+//    cluster = createDFSCluster(localConf);
+//    cluster.waitActive();
+//  fs = cluster.getFileSystem();
+
+    fs = new DistributedFileSystem();
+    URI hdfsUri = new URI("hdfs://127.0.0.1:9000");
+    fs.initialize(hdfsUri, new Configuration());
+//    FileStatus status = fs.getFileStatus(new Path("/topics"));
+//    FileStatus status = fs.getFileStatus(new Path("/topics"));
+//    fs.create(new Path("/topics"));
     super.setUp();
   }
 
