@@ -35,7 +35,7 @@ public class FSWALTest extends TestWithMiniDFSCluster {
     setUp();
     HdfsStorage storage = new HdfsStorage(connectorConfig, url);
     TopicPartition tp = new TopicPartition("mytopic", 123);
-    FSWAL wal = new FSWAL("/logs", tp, storage);
+    FSWAL wal = new FSWAL("logs", tp, storage);
     wal.append("a", "b");
     assertTrue("WAL file should exist after append",
             storage.exists("/logs/mytopic/123/log"));

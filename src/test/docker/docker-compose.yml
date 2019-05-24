@@ -1,0 +1,20 @@
+version: "2"
+
+services:
+  hadoop:
+    container_name: hadoop3
+    hostname: hadoop3
+    build:
+      context: ./hadoop-3.1.2
+      dockerfile: Dockerfile
+    image: hadoop-3.1.2
+    ports:
+      - '8042:8042'
+      - '8088:8088'
+      - '9000:9000'
+      - '9864:9864'
+      - '9866:9866'
+      - '9867:9867'
+      - '9870:9870'
+    extra_hosts:
+      - "hadoop3:127.0.0.1"

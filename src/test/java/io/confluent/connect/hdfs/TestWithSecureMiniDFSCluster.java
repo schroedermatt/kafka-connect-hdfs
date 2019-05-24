@@ -117,7 +117,7 @@ public class TestWithSecureMiniDFSCluster extends HdfsSinkConnectorTestBase {
     MiniDFSCluster cluster;
     String[] hosts = {"localhost", "localhost", "localhost"};
     MiniDFSCluster.Builder builder = new MiniDFSCluster.Builder(conf);
-    builder.hosts(hosts).nameNodePort(9001).numDataNodes(3);
+    builder.hosts(hosts).nameNodePort(9000).numDataNodes(3);
     cluster = builder.build();
     cluster.waitActive();
     return cluster;

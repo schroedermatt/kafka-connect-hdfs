@@ -38,7 +38,7 @@ public class JsonDataFileReader implements DataFileReader {
 
   @Override
   public Collection<Object> readData(Configuration conf, Path path) throws IOException {
-    String uri = "hdfs://127.0.0.1:9001";
+    String uri = "hdfs://127.0.0.1:9000";
     FileSystem fs;
     try {
       fs = FileSystem.get(new URI(uri), conf);

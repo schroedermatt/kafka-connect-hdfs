@@ -108,6 +108,33 @@
             <groupId>io.confluent</groupId>
             <artifactId>kafka-connect-storage-hive</artifactId>
             <version>${confluent.version}</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.hive.hcatalog</groupId>
+                    <artifactId>hive-hcatalog-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hive.hcatalog</groupId>
+            <artifactId>hive-hcatalog-core</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.hive</groupId>-->
+<!--            <artifactId>hive-exec</artifactId>-->
+<!--            <version>3.1.1</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.hive.shims</groupId>
+            <artifactId>hive-shims-common</artifactId>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.spotbugs</groupId>
@@ -205,7 +232,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint:all</arg>
-<!--                        <arg>-Xlint:-deprecation</arg>-->
+                        <arg>-Xlint:-deprecation</arg>
 <!--                        <arg>-Werror</arg>-->
                     </compilerArgs>
                     <showWarnings>true</showWarnings>

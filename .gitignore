@@ -2,6 +2,8 @@
 target/
 build/
 
+*.tar.gz
+
 # IntelliJ data
 *.iml
 .idea/

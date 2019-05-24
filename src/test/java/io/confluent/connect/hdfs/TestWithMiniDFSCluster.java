@@ -51,8 +51,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class TestWithMiniDFSCluster extends HdfsSinkConnectorTestBase {
-
-  protected MiniDFSCluster cluster;
   protected FileSystem fs;
   protected DataFileReader dataFileReader;
   protected Partitioner partitioner;
@@ -60,54 +58,42 @@ public class TestWithMiniDFSCluster extends HdfsSinkConnectorTestBase {
   // The default based on default configuration of 10
   protected String zeroPadFormat = "%010d";
   private Map<String, String> localProps = new HashMap<>();
+  protected String url = "hdfs://127.0.0.1:9000";
 
   @Override
   protected Map<String, String> createProps() {
     Map<String, String> props = super.createProps();
-    url = "hdfs://127.0.0.1:9000"; // + cluster.getNameNode().getClientNamenodeAddress();
     // Override configs using url here
     localProps.put(HdfsSinkConnectorConfig.HDFS_URL_CONFIG, url);
     localProps.put(StorageCommonConfig.STORE_URL_CONFIG, url);
-//    localProps.put(StorageCommonConfig.TOPICS_DIR_CONFIG, "topics");
+    localProps.put(HdfsSinkConnectorConfig.HADOOP_HOME_CONFIG, "/");
+//    localProps.put("dfs.client.use.datanode.hostname", "true");
+
+    //    localProps.put(StorageCommonConfig.TOPICS_DIR_CONFIG, "hadoop/dfs/data/topics/");
     props.putAll(localProps);
+
     return props;
   }
 
   //@Before should be omitted in order to be able to add properties per test.
   public void setUp() throws Exception {
-//    Configuration localConf = new Configuration();
-//    cluster = createDFSCluster(localConf);
-//    cluster.waitActive();
-//  fs = cluster.getFileSystem();
-
     fs = new DistributedFileSystem();
-    URI hdfsUri = new URI("hdfs://127.0.0.1:9000");
+    URI hdfsUri = new URI(url);
     fs.initialize(hdfsUri, new Configuration());
-//    FileStatus status = fs.getFileStatus(new Path("/topics"));
-//    FileStatus status = fs.getFileStatus(new Path("/topics"));
-//    fs.create(new Path("/topics"));
+    fs.delete(new Path("/topics"), true);
+    fs.delete(new Path("/logs"), true);
     super.setUp();
   }
 
   @After
   public void tearDown() throws Exception {
     if (fs != null) {
+      fs.delete(new Path("/topics"), true);
+      fs.delete(new Path("/logs"), true);
       fs.close();
     }
-    if (cluster != null) {
-      cluster.shutdown(true);
-    }
-    super.tearDown();
-  }
 
-  private MiniDFSCluster createDFSCluster(Configuration conf) throws IOException {
-    MiniDFSCluster cluster;
-    String[] hosts = {"localhost", "localhost", "localhost"};
-    MiniDFSCluster.Builder builder = new MiniDFSCluster.Builder(conf);
-    builder.hosts(hosts).nameNodePort(9001).numDataNodes(3);
-    cluster = builder.build();
-    cluster.waitActive();
-    return cluster;
+    super.tearDown();
   }
 
   /**
